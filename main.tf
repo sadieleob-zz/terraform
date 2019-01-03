@@ -22,8 +22,8 @@ resource "aws_security_group" "instance" {
   name = "terraform-example-instance"
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = "${var.server_port}"
+    to_port     = "${var.server_port}"
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -35,6 +35,10 @@ resource "aws_security_group" "instance" {
   }
 }
 
+variable "server_port" {
+    description = "The port the server will use for HTTP requests"
+
+}	
 
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
