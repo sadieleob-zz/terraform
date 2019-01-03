@@ -5,8 +5,9 @@ resource "aws_instance" "example" {
   ami           = "ami-40d28157"
   instance_type = "t2.micro"
   vpc_security_group_ids = ["${aws_security_group.instance.id}"]
+  key_name = "deployer-key"
 
-user_data = <<-EOF
+user_data= <<-EOF
               #!/bin/bash
               echo "Hello, World" > index.html
               nohup busybox httpd -f -p 8080 &
@@ -26,7 +27,14 @@ resource "aws_security_group" "instance" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
+
 
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
