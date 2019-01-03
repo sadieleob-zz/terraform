@@ -10,7 +10,7 @@ resource "aws_instance" "example" {
 user_data= <<-EOF
               #!/bin/bash
               echo "Hello, World" > index.html
-              nohup busybox httpd -f -p 8080 &
+              nohup busybox httpd -f -p "${var.server_port}" &
               EOF
     
 tags {
@@ -39,6 +39,10 @@ variable "server_port" {
     description = "The port the server will use for HTTP requests"
 
 }	
+
+output "public_ip" {
+  value = "${aws_instance.example.public_ip}"
+}
 
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
